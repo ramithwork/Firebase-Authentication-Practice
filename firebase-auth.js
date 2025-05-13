@@ -75,7 +75,10 @@ onAuthStateChanged(auth, (user) => {
         const uid = user.uid;
         const userEmail = user.email;
         console.log("State change signed in: ", user);
-        userInfoElm.textContent = `User Email: ${userEmail}, UID: ${uid}`;
+        userInfoElm.innerHTML = `
+            User Email: ${userEmail}<br>
+            UID: ${uid}<br>
+            `;
         restrcitedContentElm.style.display = 'block';
         statusElm.textContent = "User Signed In.";
     } else {
@@ -103,3 +106,4 @@ signoutElm.addEventListener("click", function(e){
 
 // BOOKMARK
 // Get a user's profile: https://firebase.google.com/docs/auth/web/manage-users#get_a_users_profile
+// Inside the restricted DIV add text boxes so can load/change/update user profile info. 
