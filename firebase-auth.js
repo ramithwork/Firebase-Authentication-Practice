@@ -18,6 +18,9 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
+// Status Elm
+const statusElm = document.getElementById('status');
+
 const signupElm = document.getElementById('signup');
 signupElm.addEventListener("click", function(e) {
     e.preventDefault();
@@ -30,11 +33,14 @@ signupElm.addEventListener("click", function(e) {
             // Signed up 
             const user = userCredential.user;
             console.log("New user signed up:", user);
+            statusElm.textContent = "User Created & Signed In.";
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log("Error:", errorCode, errorMessage);
+            console.log("Error Code:", errorCode);
+            console.log("Error Message:", errorMessage);
+            statusElm.textContent = errorCode;
         });
 });
 
@@ -50,11 +56,13 @@ signinElm.addEventListener("click", function(e) {
             // Signed in 
             const user = userCredential.user;
             console.log("Existing user signed in:", user);
+            statusElm.textContent = "User Signed In.";
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log("Error:", errorCode, errorMessage);
+            statusElm.textContent = errorCode;
         });
 });
 
@@ -69,11 +77,13 @@ onAuthStateChanged(auth, (user) => {
         console.log("State change signed in: ", user);
         userInfoElm.textContent = `User Email: ${userEmail}, UID: ${uid}`;
         restrcitedContentElm.style.display = 'block';
+        statusElm.textContent = "User Signed In.";
     } else {
         // User is signed out
         console.log("State change signed out.");
         userInfoElm.textContent = `No User logged in.`;
         restrcitedContentElm.style.display = 'none';
+        statusElm.textContent = "User Not Signed In.";
     }
 });
 
@@ -83,8 +93,13 @@ signoutElm.addEventListener("click", function(e){
     signOut(auth).then(() => {
         // Sign-out successful.
         console.log("User signed out");
+        statusElm.textContent = "User Signed Out.";
     }).catch((error) => {
         // An error happened.
         console.error("Sign-out error:", error);
+        statusElm.textContent = error.code;
     });
 });
+
+// BOOKMARK
+// Get a user's profile: https://firebase.google.com/docs/auth/web/manage-users#get_a_users_profile
