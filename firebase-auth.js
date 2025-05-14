@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -182,11 +182,17 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
 //             const newEmail = document.getElementById("prfoile-update-email").value;
 //             updateEmail(auth.currentUser, newEmail).then(() => {
 //                 // Email updated!
-//                 console.log("Email updated.");
-//                 statusElm.textContent = "Email updated.";
+//                 console.log("Email update initiated.");
+//                 statusElm.textContent = "Email update initated.";
+//                 // Send verification email.
+//                 sendEmailVerification(auth.currentUser).then(() => {
+//                     // Email verification sent!
+//                     console.log("Verification email sent. Click verification link to proceed.");
+//                     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
+//                 });
 //                 }).catch((error) => {
 //                     // An error occurred
-//                     console.log("Reauthenticated error.", error);
+//                     console.log("Update email error.", error);
 //                 statusElm.textContent = error.code;
 //                 });
 //         }).catch((error) => {
@@ -196,7 +202,11 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
 // });
 
 
+
 // BOOKMARK
+
+
+// Do the below later.
 // Update a user's primary email: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_email_address
 // Figue out how this flow works. Also look into FirebaseUI https://firebase.google.com/docs/auth/web/firebaseui
 
