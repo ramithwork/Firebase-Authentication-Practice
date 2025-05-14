@@ -197,5 +197,6 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
 
 
 // BOOKMARK
-// Update a user's profile: https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
-// Add a div with text boxes and update user profile data.
+// Update a user's primary email: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_email_address
+// Figue out how this flow works. Also look into FirebaseUI https://firebase.google.com/docs/auth/web/firebaseui
+
