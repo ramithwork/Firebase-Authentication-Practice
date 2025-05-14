@@ -201,8 +201,6 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
 //         });
 // });
 
-
-
 // BOOKMARK
 
 
