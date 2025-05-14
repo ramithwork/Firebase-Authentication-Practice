@@ -78,6 +78,9 @@ onAuthStateChanged(auth, (user) => {
         userInfoElm.innerHTML = `
             User Email: ${userEmail}<br>
             UID: ${uid}<br>
+            Display Name: ${user.displayName}<br>
+            Photo URL: ${user.photoURL}<br>
+            Email Verified: ${user.emailVerified}
             `;
         restrcitedContentElm.style.display = 'block';
         statusElm.textContent = "User Signed In.";
