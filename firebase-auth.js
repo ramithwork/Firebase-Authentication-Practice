@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -128,7 +128,22 @@ async function userProviderInfo() {
     }
 };
 
+const updateProfileDisplayNameElm = document.getElementById('update-profile-displayname');
+updateProfileDisplayNameElm.addEventListener("click", function(e){
+    e.preventDefault();
+    updateProfile(auth.currentUser, {
+        displayName: document.getElementById('prfoile-update-displayName').value
+            }).then(() => {
+                // Profile updated!
+                statusElm.textContent = "Display Name updated.";
+                console.log("Display Name updated.");
+            }).catch((error) => {
+                // An error occurred
+                statusElm.textContent = error.code;
+                console.log(error)
+            });
+});
+
 // BOOKMARK
 // Update a user's profile: https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
 // Add a div with text boxes and update user profile data.
- 
