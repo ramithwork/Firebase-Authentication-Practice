@@ -84,6 +84,7 @@ onAuthStateChanged(auth, (user) => {
             `;
         restrcitedContentElm.style.display = 'block';
         statusElm.textContent = "User Signed In.";
+        userProviderInfo();
     } else {
         // User is signed out
         console.log("State change signed out.");
@@ -107,6 +108,27 @@ signoutElm.addEventListener("click", function(e){
     });
 });
 
+async function userProviderInfo() {
+    const user = auth.currentUser;
+    console.log("Current User:", user);
+    const userInfoProvidersElm = document.getElementById('user-info-providers');
+    let html = "";
+    if (user !== null) {
+        user.providerData.forEach((profile) => {
+            html = html + `
+                Sign-in Provider: ${profile.providerId}<br>
+                Provider Specific UID: ${profile.uid}<br>
+                Provider Display Name: ${profile.displayName}<br>
+                Provider Email: ${profile.email}<br>
+                Provider Photo URL: ${profile.photoURL}<br>
+                ---end of provider---<br>
+            `
+        });
+        userInfoProvidersElm.innerHTML = html;
+    }
+};
+
 // BOOKMARK
-// Get a user's profile: https://firebase.google.com/docs/auth/web/manage-users#get_a_users_profile
-// Inside the restricted DIV add text boxes so can load/change/update user profile info. 
+// Update a user's profile: https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
+// Add a div with text boxes and update user profile data.
+ 
