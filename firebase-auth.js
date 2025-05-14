@@ -185,15 +185,21 @@ updateProfileEmailElm.addEventListener("click", function(e){
                 console.log("Email update initiated.");
                 statusElm.textContent = "Email update initated.";
                 // Send verification email.
-                sendEmailVerification(auth.currentUser).then(() => {
-                    // Email verification sent!
-                    console.log("Verification email sent. Click verification link to proceed.");
-                    statusElm.textContent = "Verification email sent. Click verification link to proceed.";
+                // Disabled because below to update email error.
+                // sendEmailVerification(auth.currentUser).then(() => {
+                //     // Email verification sent!
+                //     console.log("Verification email sent. Click verification link to proceed.");
+                //     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
                 });
                 }).catch((error) => {
                     // An error occurred
                     console.log("Update email error.", error);
-                statusElm.textContent = error.code;
+                    statusElm.textContent = error.code;
+                    // Send verification email.
+                    sendEmailVerification(auth.currentUser).then(() => {
+                    // Email verification sent!
+                    console.log("Verification email sent. Click verification link to proceed.");
+                    statusElm.textContent = "Verification email sent. Click verification link to proceed.";
                 });
         }).catch((error) => {
             console.log("Reauthenticated error.", error);
