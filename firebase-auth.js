@@ -168,44 +168,44 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
 // Change primary email.
 // Disabled because need to understand the workflow for this.
 // ********************
-const updateProfileEmailElm = document.getElementById('update-profile-email');
-updateProfileEmailElm.addEventListener("click", function(e){
-    e.preventDefault();
-    const email = prompt("Current Email");
-    const password = prompt("Password");
-    const credential = EmailAuthProvider.credential(email, password);
-    reauthenticateWithCredential(auth.currentUser, credential)
-        .then(() => {
-            // User reauthenticated.
-            console.log("Reauthenticated.");
-            statusElm.textContent = "Reauthenticated.";
-            const newEmail = document.getElementById("prfoile-update-email").value;
-            updateEmail(auth.currentUser, newEmail).then(() => {
-                // Email updated!
-                console.log("Email update initiated.");
-                statusElm.textContent = "Email update initated.";
-                // Send verification email.
-                // Disabled because below to update email error.
-                // sendEmailVerification(auth.currentUser).then(() => {
-                //     // Email verification sent!
-                //     console.log("Verification email sent. Click verification link to proceed.");
-                //     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
-                });
-                }).catch((error) => {
-                    // An error occurred
-                    console.log("Update email error.", error);
-                    statusElm.textContent = error.code;
-                    // Send verification email.
-                    sendEmailVerification(auth.currentUser).then(() => {
-                    // Email verification sent!
-                    console.log("Verification email sent. Click verification link to proceed.");
-                    statusElm.textContent = "Verification email sent. Click verification link to proceed.";
-                });
-        }).catch((error) => {
-            console.log("Reauthenticated error.", error);
-            statusElm.textContent = error.code;
-        });
-});
+// const updateProfileEmailElm = document.getElementById('update-profile-email');
+// updateProfileEmailElm.addEventListener("click", function(e){
+//     e.preventDefault();
+//     const email = prompt("Current Email");
+//     const password = prompt("Password");
+//     const credential = EmailAuthProvider.credential(email, password);
+//     reauthenticateWithCredential(auth.currentUser, credential)
+//         .then(() => {
+//             // User reauthenticated.
+//             console.log("Reauthenticated.");
+//             statusElm.textContent = "Reauthenticated.";
+//             const newEmail = document.getElementById("prfoile-update-email").value;
+//             updateEmail(auth.currentUser, newEmail).then(() => {
+//                 // Email updated!
+//                 console.log("Email update initiated.");
+//                 statusElm.textContent = "Email update initated.";
+//                 // Send verification email.
+//                 // Disabled because below to update email error.
+//                 // sendEmailVerification(auth.currentUser).then(() => {
+//                 //     // Email verification sent!
+//                 //     console.log("Verification email sent. Click verification link to proceed.");
+//                 //     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
+//                 });
+//                 }).catch((error) => {
+//                     // An error occurred
+//                     console.log("Update email error.", error);
+//                     statusElm.textContent = error.code;
+//                     // Send verification email.
+//                     sendEmailVerification(auth.currentUser).then(() => {
+//                     // Email verification sent!
+//                     console.log("Verification email sent. Click verification link to proceed.");
+//                     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
+//                 });
+//         }).catch((error) => {
+//             console.log("Reauthenticated error.", error);
+//             statusElm.textContent = error.code;
+//         });
+// });
 
 // BOOKMARK
 
