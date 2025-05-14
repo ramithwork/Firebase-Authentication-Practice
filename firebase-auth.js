@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -75,6 +75,10 @@ onAuthStateChanged(auth, (user) => {
         const uid = user.uid;
         const userEmail = user.email;
         console.log("State change signed in: ", user);
+        if (user.photoURL !== null) {
+            const profilePicElm = document.getElementById('profile-pic');
+            profilePicElm.src = user.photoURL;
+        }
         userInfoElm.innerHTML = `
             User Email: ${userEmail}<br>
             UID: ${uid}<br>
@@ -143,6 +147,54 @@ updateProfileDisplayNameElm.addEventListener("click", function(e){
                 console.log(error)
             });
 });
+
+const updateProfilePhotoURLElm = document.getElementById('update-profile-photoURL');
+updateProfilePhotoURLElm.addEventListener("click", function(e){
+    e.preventDefault();
+    updateProfile(auth.currentUser, {
+        photoURL: document.getElementById('prfoile-update-photoURL').value
+            }).then(() => {
+                // Profile updated!
+                statusElm.textContent = "Photo URL updated.";
+                console.log("Photo URL updated.");
+            }).catch((error) => {
+                // An error occurred
+                statusElm.textContent = error.code;
+                console.log(error)
+            });
+});
+
+// ********************
+// Change primary email.
+// Disabled because need to understand the workflow for this.
+// ********************
+// const updateProfileEmailElm = document.getElementById('update-profile-email');
+// updateProfileEmailElm.addEventListener("click", function(e){
+//     e.preventDefault();
+//     const email = prompt("Current Email");
+//     const password = prompt("Password");
+//     const credential = EmailAuthProvider.credential(email, password);
+//     reauthenticateWithCredential(auth.currentUser, credential)
+//         .then(() => {
+//             // User reauthenticated.
+//             console.log("Reauthenticated.");
+//             statusElm.textContent = "Reauthenticated.";
+//             const newEmail = document.getElementById("prfoile-update-email").value;
+//             updateEmail(auth.currentUser, newEmail).then(() => {
+//                 // Email updated!
+//                 console.log("Email updated.");
+//                 statusElm.textContent = "Email updated.";
+//                 }).catch((error) => {
+//                     // An error occurred
+//                     console.log("Reauthenticated error.", error);
+//                 statusElm.textContent = error.code;
+//                 });
+//         }).catch((error) => {
+//             console.log("Reauthenticated error.", error);
+//             statusElm.textContent = error.code;
+//         });
+// });
+
 
 // BOOKMARK
 // Update a user's profile: https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
