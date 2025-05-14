@@ -32,8 +32,15 @@ signupElm.addEventListener("click", function(e) {
         .then((userCredential) => {
             // Signed up 
             const user = userCredential.user;
-            console.log("New user signed up:", user);
-            statusElm.textContent = "User Created & Signed In.";
+            // Send verification email
+            sendEmailVerification(auth.currentUser).then(() => {
+                // Email verification sent!
+                console.log("New user signed up. Verification email sent:", user);
+                statusElm.textContent = "User Created & Signed In. Verification email sent";
+            })
+            .catch((error) => {
+                console.log("sendEmailVerification error", error.code);
+            });
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -164,53 +171,44 @@ updateProfilePhotoURLElm.addEventListener("click", function(e){
             });
 });
 
-// ********************
 // Change primary email.
-// Disabled because need to understand the workflow for this.
-// ********************
-// const updateProfileEmailElm = document.getElementById('update-profile-email');
-// updateProfileEmailElm.addEventListener("click", function(e){
-//     e.preventDefault();
-//     const email = prompt("Current Email");
-//     const password = prompt("Password");
-//     const credential = EmailAuthProvider.credential(email, password);
-//     reauthenticateWithCredential(auth.currentUser, credential)
-//         .then(() => {
-//             // User reauthenticated.
-//             console.log("Reauthenticated.");
-//             statusElm.textContent = "Reauthenticated.";
-//             const newEmail = document.getElementById("prfoile-update-email").value;
-//             updateEmail(auth.currentUser, newEmail).then(() => {
-//                 // Email updated!
-//                 console.log("Email update initiated.");
-//                 statusElm.textContent = "Email update initated.";
-//                 // Send verification email.
-//                 // Disabled because below to update email error.
-//                 // sendEmailVerification(auth.currentUser).then(() => {
-//                 //     // Email verification sent!
-//                 //     console.log("Verification email sent. Click verification link to proceed.");
-//                 //     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
-//                 });
-//                 }).catch((error) => {
-//                     // An error occurred
-//                     console.log("Update email error.", error);
-//                     statusElm.textContent = error.code;
-//                     // Send verification email.
-//                     sendEmailVerification(auth.currentUser).then(() => {
-//                     // Email verification sent!
-//                     console.log("Verification email sent. Click verification link to proceed.");
-//                     statusElm.textContent = "Verification email sent. Click verification link to proceed.";
-//                 });
-//         }).catch((error) => {
-//             console.log("Reauthenticated error.", error);
-//             statusElm.textContent = error.code;
-//         });
-// });
+const updateProfileEmailElm = document.getElementById('update-profile-email');
+updateProfileEmailElm.addEventListener("click", function(e){
+    e.preventDefault();
+    const newEmail = document.getElementById('prfoile-update-email').value;
+    // 👇 Call this when user clicks "Change Email"
+    async function changeEmailAddress(currentPassword) {
+        const user = auth.currentUser;
+        if (!user) {
+            throw new Error("No user is signed in.");
+        }
+        try {
+            // 1. Re-authenticate the user
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            await reauthenticateWithCredential(user, credential);
+            console.log("Re-authentication successful.");
+            statusElm.textContent = "Re-authentication successful.";
+
+            // 2. Update the email
+            // IMPORTANT!!!: Uncheck email enumeration protection
+            // Authentication > Settings > User Actions
+            await updateEmail(user, newEmail);
+            statusElm.textContent = "Email change successful.";
+
+            // 3. Send verification to the new email
+            await sendEmailVerification(user);
+            statusElm.textContent = "Verification email sent.";
+            console.log("Email updated. Verification email sent.");
+        } catch (error) {
+            console.error("Error changing email:", error);
+            alert(error.message); // For UI feedback
+        }
+    };
+    const currentPassword = prompt("Password");
+    changeEmailAddress(currentPassword);
+});
+
+
 
 // BOOKMARK
-
-
-// Do the below later.
-// Update a user's primary email: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_email_address
-// Figue out how this flow works. Also look into FirebaseUI https://firebase.google.com/docs/auth/web/firebaseui
-
+// Set user's password: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_password
