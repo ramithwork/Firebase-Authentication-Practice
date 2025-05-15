@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updatePassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -21,6 +21,7 @@ const auth = getAuth(app);
 // Status Elm
 const statusElm = document.getElementById('status');
 
+// Sign Up.
 const signupElm = document.getElementById('signup');
 signupElm.addEventListener("click", function(e) {
     e.preventDefault();
@@ -51,6 +52,7 @@ signupElm.addEventListener("click", function(e) {
         });
 });
 
+// Sign In.
 const signinElm = document.getElementById('signin');
 signinElm.addEventListener("click", function(e) {
     e.preventDefault();
@@ -105,6 +107,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// Sign Out.
 const signoutElm = document.getElementById('signout');
 signoutElm.addEventListener("click", function(e){
     // Sign out a signed in user.
@@ -119,6 +122,7 @@ signoutElm.addEventListener("click", function(e){
     });
 });
 
+// Info for all providers.
 async function userProviderInfo() {
     const user = auth.currentUser;
     console.log("Current User:", user);
@@ -139,6 +143,7 @@ async function userProviderInfo() {
     }
 };
 
+// Update displayName
 const updateProfileDisplayNameElm = document.getElementById('update-profile-displayname');
 updateProfileDisplayNameElm.addEventListener("click", function(e){
     e.preventDefault();
@@ -155,6 +160,7 @@ updateProfileDisplayNameElm.addEventListener("click", function(e){
             });
 });
 
+// Update profile photo URL.
 const updateProfilePhotoURLElm = document.getElementById('update-profile-photoURL');
 updateProfilePhotoURLElm.addEventListener("click", function(e){
     e.preventDefault();
@@ -208,7 +214,39 @@ updateProfileEmailElm.addEventListener("click", function(e){
     changeEmailAddress(currentPassword);
 });
 
+// Update Password.
+const updatePasswordElm = document.getElementById("update-password");
+updatePasswordElm.addEventListener("click", function(e){
+    e.preventDefault();
+    const newPassword = document.getElementById("new-password").value;
+    async function updatePasswordProcess() {
+        try {
+            const user = auth.currentUser;
 
+            // 0. Get login info
+            const currentEmail = prompt("Current Email");
+            const currentPassword = prompt("Current Password");
+
+            // 1. Re-authenticate the user
+            const credential = EmailAuthProvider.credential(currentEmail, currentPassword);
+            await reauthenticateWithCredential(user, credential);
+            console.log("Re-authentication successful.");
+            statusElm.textContent = "Re-authentication successful.";
+
+            // 2. Update password
+            await updatePassword(user, newPassword).then(() => {
+                statusElm.textContent = "Password change successful.";
+                console.log("Password change successful.");
+            }).catch((error) => {
+                statusElm.textContent = error.code;
+            });
+        } catch (error) {
+            console.error("Error changing password:", error);
+            alert(error.message); // For UI feedback
+        }
+    };
+    updatePasswordProcess();
+});
 
 // BOOKMARK
 // Set user's password: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_password
