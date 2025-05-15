@@ -341,24 +341,6 @@ googleSigninPopupElm.addEventListener("click", function(e){
 });
 // Redirect method didn't work. 
 // Work on that.
-// Redirect Test 1
-const googleSigninRedirectElm = document.getElementById("google-signin-redirect");
-googleSigninRedirectElm.addEventListener("click", function(){
-    signInWithRedirect(auth, provider);
-});
-// Handle redirect result after returning from Google's auth page
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result && result.user) {
-          const user = result.user;
-          statusElm.textContent =
-            `Signed in as ${user.displayName} (${user.email})`;
-        }
-      })
-      .catch((error) => {
-        console.error("Redirect sign-in error:", error);
-      });
-
 
 
 // BOOKMARK
