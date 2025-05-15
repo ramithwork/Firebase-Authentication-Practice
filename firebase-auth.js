@@ -339,52 +339,25 @@ googleSigninPopupElm.addEventListener("click", function(e){
             statusElm.textContent = errorCode;
         });
 });
-// Redirect
+// Redirect method didn't work. 
+// Work on that.
+// Redirect Test 1
 const googleSigninRedirectElm = document.getElementById("google-signin-redirect");
-googleSigninRedirectElm.addEventListener("click", function(e){
-    signInWithRedirect(auth, provider)
-        .then(() => {
-            // Redirect started successfully. The browser will navigate to Google.
-            console.log("Google sign-in redirect initiated.");
-        })
-        .catch((error) => {
-            console.error("Error initiating Google sign-in:", error);
-        });
+googleSigninRedirectElm.addEventListener("click", function(){
+    signInWithRedirect(auth, provider);
 });
-// Check for the redirect result when the page loads
-getRedirectResult(auth)
-    .then((result) => {
-        if (result) {
-        // User successfully signed in!
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
-
-        console.log("Sign-in successful!");
-        console.log("User:", user);
-        console.log("Google Access Token:", token);
-
-        // You can now update your UI, store user information, etc.
-        } else {
-        // No redirect result, user might not have just signed in.
-        console.log("No redirect result.");
+// Handle redirect result after returning from Google's auth page
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          const user = result.user;
+          statusElm.textContent =
+            `Signed in as ${user.displayName} (${user.email})`;
         }
-    })
-    .catch((error) => {
-        // Handle errors from the redirect
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData?.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-
-        console.error("Error during Google sign-in:", error);
-        console.error("Error Code:", errorCode);
-        console.error("Error Message:", errorMessage);
-        if (email) {
-        console.error("Email:", email);
-        }
-        // Display error message to the user
-    });
+      })
+      .catch((error) => {
+        console.error("Redirect sign-in error:", error);
+      });
 
 
 
