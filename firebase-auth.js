@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updatePassword, sendPasswordResetEmail, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updatePassword, sendPasswordResetEmail, deleteUser, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -309,6 +309,82 @@ deleteUserElm.addEventListener("click", function(e){
 // Authenticate with Firebase Using Email Link
 // *******************************************
 // Didn't look into it too much because it isn't widely used. But something worth looking into later. https://firebase.google.com/docs/auth/web/email-link-auth
+
+// Google Provider
+// Docs: https://firebase.google.com/docs/auth/web/google-signin
+const provider = new GoogleAuthProvider();
+// Popup
+const googleSigninPopupElm = document.getElementById("google-signin-popup");
+googleSigninPopupElm.addEventListener("click", function(e){
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            // IdP data available using getAdditionalUserInfo(result)
+            console.log(`User ${user.email} signed in`);
+            statusElm.textContent = `User ${user.email} signed in`;
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            console.log("errorCode:", errorCode);
+            console.log("error.customData.email", email);
+            statusElm.textContent = errorCode;
+        });
+});
+// Redirect
+const googleSigninRedirectElm = document.getElementById("google-signin-redirect");
+googleSigninRedirectElm.addEventListener("click", function(e){
+    signInWithRedirect(auth, provider)
+        .then(() => {
+            // Redirect started successfully. The browser will navigate to Google.
+            console.log("Google sign-in redirect initiated.");
+        })
+        .catch((error) => {
+            console.error("Error initiating Google sign-in:", error);
+        });
+});
+// Check for the redirect result when the page loads
+getRedirectResult(auth)
+    .then((result) => {
+        if (result) {
+        // User successfully signed in!
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
+
+        console.log("Sign-in successful!");
+        console.log("User:", user);
+        console.log("Google Access Token:", token);
+
+        // You can now update your UI, store user information, etc.
+        } else {
+        // No redirect result, user might not have just signed in.
+        console.log("No redirect result.");
+        }
+    })
+    .catch((error) => {
+        // Handle errors from the redirect
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData?.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        console.error("Error during Google sign-in:", error);
+        console.error("Error Code:", errorCode);
+        console.error("Error Message:", errorMessage);
+        if (email) {
+        console.error("Email:", email);
+        }
+        // Display error message to the user
+    });
 
 
 
