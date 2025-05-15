@@ -339,9 +339,13 @@ googleSigninPopupElm.addEventListener("click", function(e){
             statusElm.textContent = errorCode;
         });
 });
-// Redirect method didn't work. 
-// Work on that.
+// ********************
+// Redirect 
+// ********************
+// When using signInWithRedirect, getRedirectResult doesn't return a value to the result object. Research suggests this won't be an issue when hosted on a subdomain of firebaseapp.com. Will need to look into this farther.
 
 
 // BOOKMARK
 // Authenticate Using Google with JavaScript: https://firebase.google.com/docs/auth/web/google-signin
+
+// Wrapping up authentication at this point because I have gained enough knowledge to start integrating auth into apps. 
