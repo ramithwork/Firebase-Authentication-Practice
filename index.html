@@ -18,6 +18,11 @@
         #status {
             color: red;
         }
+        #delete-user {
+            background-color: red;
+            color: white;
+            font-weight: 900;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +45,11 @@
             </form>
         </div>
     </div>
+    <div>
+        <p>Forgot Password?</p>
+        <input type="text" name="password-reset-email" id="password-reset-email" placeholder="you@email.com"><button type="button" id="send-password-reset-email">Send Password Reset Email</button>
+    </div>
+    <br>
     <div class="view">
         <p>This content is restrcited.</p>
         <div id="restrcited-content" class="view">
@@ -47,7 +57,7 @@
             <img id="profile-pic" src="" alt="">
             <p id="user-info">No User</p>
             <p id="user-info-providers">No User</p>
-            <button id="signout">Sign Out</button>
+            <button id="signout">Sign Out</button> <button type="button" id="delete-user">Delete User</button>
             <div id="profile-data">
                 <h3>Update profile data</h3>
                 <form action="">

@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updatePassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, updatePassword, sendPasswordResetEmail, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 // Config for Firebase project.
 const firebaseConfig = {
@@ -248,5 +248,62 @@ updatePasswordElm.addEventListener("click", function(e){
     updatePasswordProcess();
 });
 
+// Send password reset email.
+const sendPasswordResetEmailElm = document.getElementById("send-password-reset-email");
+sendPasswordResetEmailElm.addEventListener("click", function(e){
+    e.preventDefault();
+    const email = document.getElementById("password-reset-email").value;
+    sendPasswordResetEmail(auth, email).then(() => {
+        // Password reset email sent!
+        console.log("Password reset email sent.");
+        statusElm.textContent = "Password reset email sent.";
+    })
+    .catch((error) => {
+        console.log(error.code);
+        statusElm.textContent = error.code;
+    });
+});
+
+// Delete User
+const deleteUserElm = document.getElementById("delete-user");
+deleteUserElm.addEventListener("click", function(e){
+    const deleteConfirmation = prompt("Type YES to delete");
+    if (deleteConfirmation === "YES") {
+        async function deleteUserProcess() {
+            try {
+                const user = auth.currentUser;
+
+                // 0. Get login info
+                const currentEmail = prompt("Current Email");
+                const currentPassword = prompt("Current Password");
+
+                // 1. Re-authenticate the user
+                const credential = EmailAuthProvider.credential(currentEmail, currentPassword);
+                await reauthenticateWithCredential(user, credential);
+                console.log("Re-authentication successful.");
+                statusElm.textContent = "Re-authentication successful.";
+
+                // 2. Delete User
+                await deleteUser(user).then(() => {
+                    statusElm.textContent = "User Delete successful.";
+                    console.log("User Delete successful.");
+                    signoutElm.click();
+                }).catch((error) => {
+                    statusElm.textContent = error.code;
+                    console.log(error.code);
+                });
+            } catch (error) {
+                console.error("Error deleteing user:", error);
+                alert(error.message); // For UI feedback
+            }
+        };
+        deleteUserProcess();
+    } else {
+        console.log("Did not type YES to delete user.");
+        statusElm.textContent = "Did not type YES to delete user.";
+        return;
+    }
+});
+
 // BOOKMARK
-// Set user's password: https://firebase.google.com/docs/auth/web/manage-users#set_a_users_password
+// Authenticate with Firebase using Password-Based Accounts using Javascript: https://firebase.google.com/docs/auth/web/password-auth
