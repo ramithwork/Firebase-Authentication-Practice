@@ -198,6 +198,7 @@ updateProfileEmailElm.addEventListener("click", function(e){
             // 2. Update the email
             // IMPORTANT!!!: Uncheck email enumeration protection
             // Authentication > Settings > User Actions
+            // Enumeration Docs: https://firebase.google.com/docs/auth/web/password-auth#enumeration-protection
             await updateEmail(user, newEmail);
             statusElm.textContent = "Email change successful.";
 
@@ -305,5 +306,11 @@ deleteUserElm.addEventListener("click", function(e){
     }
 });
 
+// Authenticate with Firebase Using Email Link
+// *******************************************
+// Didn't look into it too much because it isn't widely used. But something worth looking into later. https://firebase.google.com/docs/auth/web/email-link-auth
+
+
+
 // BOOKMARK
-// Authenticate with Firebase using Password-Based Accounts using Javascript: https://firebase.google.com/docs/auth/web/password-auth
+// Authenticate Using Google with JavaScript: https://firebase.google.com/docs/auth/web/google-signin
