@@ -42,12 +42,11 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Deploy to Firebase Hosting
+      - name: Deploy to Firebase Preview Channel
+        if: github.ref != 'refs/heads/main'
         env:
           FIREBASE_CI_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            firebase deploy --token "$FIREBASE_CI_TOKEN"
-          else
-            firebase hosting:channel:deploy $(echo ${{ github.ref }} | sed 's|refs/heads/||') --token "$FIREBASE_CI_TOKEN"
-          fi
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          firebase hosting:channel:deploy "$BRANCH_NAME" --token "$FIREBASE_CI_TOKEN"
+
